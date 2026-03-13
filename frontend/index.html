@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8"> <!-- character encoding -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- responsive layout -->
+<title>Project Manager</title>
+
+<link rel="stylesheet" href="style.css"> <!-- external CSS -->
+
+</head>
+
+<body>
+
+<h1 class="title">Project Management Dashboard</h1> <!-- page title -->
+
+<div class="container"> <!-- main layout container -->
+
+<!-- LEFT PANEL : Project section -->
+<div class="panel">
+
+<h2>Create Project</h2>
+
+<!-- project input fields -->
+<input id="name" placeholder="Project Name">
+<input id="desc" placeholder="Description">
+
+<!-- button to create project -->
+<button onclick="createProject()">Create Project</button>
+
+<h2>Projects</h2>
+
+<!-- project list will appear here -->
+<ul id="projects"></ul>
+
+</div>
+
+
+<!-- RIGHT PANEL : Task section -->
+<div class="panel">
+
+<h2>Create Task</h2>
+
+<!-- project id to link task with project -->
+<input id="projectId" placeholder="Project ID">
+
+<input id="title" placeholder="Task Title">
+
+<input id="taskdesc" placeholder="Task Description">
+
+<!-- task status -->
+<select id="status">
+<option value="todo">Todo</option>
+<option value="in-progress">In Progress</option>
+<option value="done">Done</option>
+</select>
+
+<!-- task priority -->
+<select id="priority">
+<option value="low">Low</option>
+<option value="medium">Medium</option>
+<option value="high">High</option>
+</select>
+
+<!-- task due date -->
+<input type="date" id="due_date">
+
+<!-- button to create task -->
+<button onclick="createTask()">Create Task</button>
+
+<h2>Tasks</h2>
+
+<!-- table to display tasks -->
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Title</th>
+<th>Status</th>
+<th>Priority</th>
+<th>Due Date</th>
+</tr>
+</thead>
+
+<!-- task rows will be added here -->
+<tbody id="tasks">
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- button to load tasks -->
+<div class="center">
+<button onclick="loadTasks()">Load Tasks</button>
+</div>
+
+<!-- javascript file -->
+<script src="app.js"></script>
+
+</body>
+</html>
