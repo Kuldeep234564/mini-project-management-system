@@ -1,64 +1,68 @@
-const express = require("express"); // importing express
-const router = express.Router(); // creating router for project routes
-const db = require("../db"); // database connection
+const express = require("express");
+const router = express.Router();
+const db = require("../db");
 
 
 // Create a new project
-router.post("/", (req,res)=>{
+router.post("/", (req, res) => {
 
-    // getting data sent from client
-    const {name, description} = req.body;
+    const { name, description } = req.body || {};
 
-    // query to insert project in database
-    const sql = "INSERT INTO projects (name, description) VALUES (?,?)";
+    if (!name || !description) {
+        return res.status(400).json({ message: "Name and description are required" });
+    }
 
-    // run query
-    db.query(sql,[name,description],(err,result)=>{
+    const sql = "INSERT INTO projects (name, description) VALUES (?, ?)";
 
-        // if something goes wrong
-        if(err) return res.status(500).json(err);
+    db.query(sql, [name, description], (err, result) => {
 
-        // project created successfully
-        res.json({message:"Project created"});
+        if (err) {
+            console.log(err);
+            return res.status(500).json(err);
+        }
+
+        res.json({
+            message: "Project created successfully",
+            project_id: result.insertId
+        });
     });
+
 });
 
 
 // Get all projects with pagination
-router.get("/", (req,res)=>{
+router.get("/", (req, res) => {
 
-    // page number from request (default = 1)
     const page = parseInt(req.query.page) || 1;
-
-    // number of records per page
     const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
 
-    // calculate offset
-    const offset = (page-1)*limit;
-
-    // query to fetch projects
     const sql = "SELECT * FROM projects LIMIT ? OFFSET ?";
 
-    db.query(sql,[limit,offset],(err,result)=>{
+    db.query(sql, [limit, offset], (err, result) => {
 
-        // handle error
-        if(err) return res.status(500).json(err);
+        if (err) {
+            console.log(err);
+            return res.status(500).json(err);
+        }
 
-        // return project list
         res.json(result);
     });
 
 });
 
 
-// Get project by id
-router.get("/:id",(req,res)=>{
+// Get project by ID
+router.get("/:id", (req, res) => {
 
-    const sql = "SELECT * FROM projects WHERE id=?";
+    const sql = "SELECT * FROM projects WHERE id = ?";
 
-    db.query(sql,[req.params.id],(err,result)=>{
+    db.query(sql, [req.params.id], (err, result) => {
 
-        if(err) return res.status(500).json(err);
+        if (err) {
+            console.log(err);
+            return res.status(500).json(err);
+        }
 
         res.json(result);
     });
@@ -67,17 +71,21 @@ router.get("/:id",(req,res)=>{
 
 
 // Delete project
-router.delete("/:id",(req,res)=>{
+router.delete("/:id", (req, res) => {
 
-    const sql = "DELETE FROM projects WHERE id=?";
+    const sql = "DELETE FROM projects WHERE id = ?";
 
-    db.query(sql,[req.params.id],(err,result)=>{
+    db.query(sql, [req.params.id], (err, result) => {
 
-        if(err) return res.status(500).json(err);
+        if (err) {
+            console.log(err);
+            return res.status(500).json(err);
+        }
 
-        res.json({message:"Project deleted"});
+        res.json({ message: "Project deleted successfully" });
     });
 
 });
 
-module.exports = router; // exporting router
+
+module.exports = router;
